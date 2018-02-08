@@ -43,10 +43,12 @@ var path	=	{
 
 
 var config	=	{
+
 	server: {
 		baseDir:"./build"
-	},  
-	tunnel: true,
+	},
+
+	//tunnel: true,
 	host: "lochalhost",
 	port: 9000,
 	logPrefix: "Mr.Dron"  		  
@@ -54,6 +56,7 @@ var config	=	{
 
 
 gulp.task('webserver', function () {
+	proxy: "example.com",  
     browserSync(config);
 });
 

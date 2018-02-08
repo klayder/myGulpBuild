@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "pixelplus",
   "version": "1.0.0",
   "description": "first project on gulp",
   "main": "index.js",
@@ -9,7 +9,7 @@
   "author": "Andrey Sarokin",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.23.5",
+    "browser-sync": "^2.23.6",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.1.0",
     "gulp-file-include": "^2.0.1",
