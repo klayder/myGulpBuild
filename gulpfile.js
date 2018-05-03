@@ -1,7 +1,7 @@
 var	gulp	=	require("gulp");
 	watch	=	require("gulp-watch"),
 	prefixer	=	require("gulp-autoprefixer"),
-	uglify	=	require("gulp-uglify"),
+	uglify	=	require('gulp-uglify-es').default,
 	sass	=	require("gulp-sass"),
 	sourcemaps	=	require("gulp-sourcemaps"),
 	fileInclude	=	require("gulp-file-include"),
@@ -17,7 +17,9 @@ var path	=	{
 	build: {
 		html: "build/", 
 		js: "build/js/",
+		jsDep: "build/js/dependencies/",
 		css: "build/css/",
+		cssDep: "build/css/dependencies/",
 		img: "build/img/",
 		fonts: "build/fonts/",
 		data: "build/data/"
@@ -25,15 +27,19 @@ var path	=	{
 	src: {
 		html: "src/*.html", 
 		js: "src/js/main.js",
+		jsDep: "src/js/dependencies/dependencies.js",
 		css: "src/css/main.scss",
+		cssDep: "src/css/dependencies/dependencies.scss",
 		img: "src/img/**/*.*",
 		fonts: "src/fonts/**/*.*",
 		data: "src/data/**/*.*"
 	},
 	watch: {
 		html: "src/**/*.html", 
+		jsDep: "src/js/dependencies/*.js",
 		js: "src/js/**/*.js",
 		css: "src/css/**/*.scss",
+		cssDep: "src/css/dependencies/*.scss",
 		img: "src/img/**/*.*",
 		fonts: "src/fonts/**/*.*",
 		data: "src/data/**/*.*"
@@ -73,6 +79,14 @@ gulp.task("html:build",function(){
         .pipe(reload({stream:true}));
 });
 
+gulp.task("jsDep:build",function(){
+	gulp.src(path.src.jsDep)
+		.pipe(fileInclude())
+		.pipe(uglify())
+		.pipe(gulp.dest(path.build.jsDep))
+		.pipe(reload({stream:true}));
+});
+
 
 gulp.task("js:build",function(){
 	gulp.src(path.src.js)
@@ -83,6 +97,22 @@ gulp.task("js:build",function(){
 		.pipe(gulp.dest(path.build.js))
 		.pipe(reload({stream:true}));
 });
+
+
+
+gulp.task("cssDep:build",function(){
+	gulp.src(path.src.cssDep)
+		//.pipe(sourcemaps.init())
+		.pipe(fileInclude())
+		.pipe(sass())
+		.pipe(prefixer())
+		.pipe(cssmin())
+		//.pipe(sourcemaps.write())
+		.pipe(gulp.dest(path.build.cssDep))
+		.pipe(reload({stream:true}));
+});
+
+
 
 gulp.task("css:build",function(){
 	gulp.src(path.src.css)
@@ -123,7 +153,9 @@ gulp.task("data:build",function(){
 
 gulp.task("build",[
 	"html:build",
+	"cssDep:build",
 	"css:build",
+	"jsDep:build",
 	"js:build",
 	"image:build",
 	"fonts:build",
@@ -137,6 +169,14 @@ gulp.task("watch",function(){
 
 	watch([path.watch.css],function(event,cb){
 		gulp.start("css:build");
+	});
+
+	watch([path.watch.cssDep],function(event,cb){
+		gulp.start("cssDep:build");
+	});
+
+	watch([path.watch.jsDep],function(event,cb){
+		gulp.start("jsDep:build");
 	});
 
 	watch([path.watch.js],function(event,cb){
